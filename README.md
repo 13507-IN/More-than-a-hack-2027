@@ -53,7 +53,7 @@ only CSVs, so it runs on a fresh clone before any match data exists.
    first seconds after it, never copied across as a label.
 5. **Decode a persistent state sequence** with a sticky three-state Viterbi
    (H/A/D). The transition prior is expressed as football durations: a mean
-   possession of ~14 s and a mean dead-ball spell of ~11 s. Short flickers are
+   possession of ~18 s and a mean dead-ball spell of ~11 s. Short flickers are
    merged into their longer neighbour afterwards.
 6. **Write and check** `frame,label` for every frame. Frames outside the two
    halves are `X`, which is ungraded and therefore free.

@@ -47,17 +47,16 @@ def write_submission(path, labels):
 
 
 def possession_stats(labels):
-    """Possession count and mean duration, bridging X inside a half."""
+    """Count same-team H/A runs, matching the scorer's spell definition."""
     codes = np.full(len(labels), -1, dtype=np.int8)
     for index, letter in enumerate("HAD"):
         codes[labels == letter] = index
     alive = np.isin(codes, (0, 1))
-    # Count maximal alive runs, treating X/D as separators for this quick view.
-    if alive.any():
-        starts = np.flatnonzero(alive & ~np.r_[False, alive[:-1]])
-    else:
-        starts = np.array([], dtype=np.int64)
-    n = int(len(starts))
+    # A possession is a maximal run of one team, so H->A starts two spells.
+    n = 0
+    for code in (0, 1):
+        mask = codes == code
+        n += int(np.sum(mask & ~np.r_[False, mask[:-1]]))
     alive_frames = int(alive.sum())
     return {
         "frames": int(len(labels)),

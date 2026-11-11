@@ -49,13 +49,13 @@ class Config:
     setpiece_team_weight: float = 1.2
 
     # ---- temporal decoder ----------------------------------------------------
-    mean_team_spell_s: float = 14.0
+    mean_team_spell_s: float = 18.0
     mean_dead_spell_s: float = 11.0
     emission_scale: float = 1.0
 
     # ---- run post-processing -------------------------------------------------
-    min_team_run_s: float = 2.0
-    min_dead_run_s: float = 1.0
+    min_team_run_s: float = 3.0
+    min_dead_run_s: float = 2.0
 
     # ---- output --------------------------------------------------------------
     # Frames outside the two halves are never scored.  Writing X there costs
