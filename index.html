@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#eef2ef">
+    <title>Possession Lab | 2027 Challenge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-frame">
+      <aside class="side-rail" aria-label="Challenge and file contract">
+        <a class="brand" href="./index.html" aria-label="Possession Lab home">
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M4 25V7M10 25V12M16 25V4M22 25V10M28 25V15" />
+          </svg>
+          <span>
+            <strong>Possession Lab</strong>
+            <small>Phase 1 · Ball possession</small>
+          </span>
+        </a>
+
+        <section class="rail-section">
+          <h2>Match scope</h2>
+          <p class="rail-match">One full LaLiga match</p>
+          <p class="rail-copy">199,319 tactical-video frames, checked in your browser.</p>
+        </section>
+
+        <section class="rail-section">
+          <h2>Label key</h2>
+          <ul class="label-key">
+            <li><span class="key-mark key-home">H</span><span>Home possession</span></li>
+            <li><span class="key-mark key-away">A</span><span>Away possession</span></li>
+            <li><span class="key-mark key-dead">D</span><span>Dead ball</span></li>
+            <li><span class="key-mark key-uncertain">X</span><span>Uncertain / abstain</span></li>
+          </ul>
+        </section>
+
+        <section class="rail-note">
+          <h2>Local by design</h2>
+          <p>Your CSV stays on this device. This screen checks its shape; it does not run the official scorer.</p>
+        </section>
+
+        <p class="rail-foot">Frame labels are the unit of review.</p>
+      </aside>
+
+      <div class="work-area">
+        <header class="top-bar">
+          <p><span>Challenge</span><span aria-hidden="true">/</span><strong>Ball possession</strong></p>
+          <span class="local-indicator"><i aria-hidden="true"></i> Browser-only workspace</span>
+        </header>
+
+        <main class="sheet">
+          <section class="page-heading" aria-labelledby="page-title">
+            <div>
+              <p class="breadcrumb">Phase 1 / Submission review</p>
+              <h1 id="page-title">Possession review</h1>
+              <p class="page-intro">Check a full-match frame-label CSV, then inspect where its possession spells change.</p>
+            </div>
+            <button class="button button-primary" id="choose-file" type="button">Choose submission CSV</button>
+            <input id="file-input" type="file" accept=".csv,text/csv" hidden>
+          </section>
+
+          <section
+            class="import-panel"
+            id="drop-zone"
+            aria-labelledby="import-title"
+            aria-label="Choose a submission CSV or drop it here"
+            role="button"
+            tabindex="0">
+            <div class="import-copy">
+              <h2 id="import-title">Load a candidate file</h2>
+              <p>Expected columns: <code>frame,label</code>. Frames must run from 0 to 199,318 with one label per frame.</p>
+              <p class="file-status" id="file-status" role="status" aria-live="polite">No CSV loaded yet.</p>
+            </div>
+            <span class="drop-instruction">Or drop the CSV here</span>
+          </section>
+
+          <section class="validation-panel" id="validation-panel" aria-live="polite" hidden>
+            <div class="validation-heading">
+              <div>
+                <h2 id="validation-title">CSV checks</h2>
+                <p id="validation-summary"></p>
+              </div>
+              <span class="validation-state" id="validation-state"></span>
+            </div>
+            <ul class="validation-issues" id="validation-issues"></ul>
+          </section>
+
+          <section class="stats-strip" aria-label="Submission summary">
+            <div class="stat-cell">
+              <span class="stat-label">Frames checked</span>
+              <strong class="stat-value" id="stat-frames">-</strong>
+            </div>
+            <div class="stat-cell">
+              <span class="stat-label">Consecutive label runs</span>
+              <strong class="stat-value" id="stat-runs">-</strong>
+            </div>
+            <div class="stat-cell stat-file">
+              <span class="stat-label">Current file</span>
+              <strong class="stat-file-name" id="stat-file">No file selected</strong>
+            </div>
+          </section>
+
+          <section class="timeline-panel" aria-labelledby="timeline-title">
+            <div class="section-heading">
+              <div>
+                <h2 id="timeline-title">Full-match label timeline</h2>
+                <p id="timeline-caption">Load a valid CSV to see how labels run across the match.</p>
+              </div>
+              <span class="timeline-scale">Frame index · 0–199,318</span>
+            </div>
+
+            <div class="timeline-wrap" id="timeline-wrap">
+              <p class="timeline-empty" id="timeline-empty">The label strip will appear here after a valid CSV is loaded.</p>
+              <canvas
+                id="timeline-canvas"
+                role="slider"
+                aria-label="Full-match possession label timeline"
+                aria-orientation="horizontal"
+                aria-valuemin="0"
+                aria-valuemax="199318"
+                aria-valuenow="0"
+                aria-valuetext="Load a valid CSV to inspect frames"
+                aria-disabled="true"
+                tabindex="0">
+                Timeline unavailable. Use the frame control below after loading a CSV.
+              </canvas>
+            </div>
+            <div class="axis-labels" aria-hidden="true">
+              <span>0</span>
+              <span>49,830</span>
+              <span>99,659</span>
+              <span>149,489</span>
+              <span>199,318</span>
+            </div>
+
+            <div class="timeline-footer">
+              <div class="timeline-legend" aria-label="Label counts">
+                <span><i class="legend-mark legend-home"></i>Home <b id="count-home">-</b></span>
+                <span><i class="legend-mark legend-away"></i>Away <b id="count-away">-</b></span>
+                <span><i class="legend-mark legend-dead"></i>Dead <b id="count-dead">-</b></span>
+                <span><i class="legend-mark legend-uncertain"></i>Uncertain <b id="count-uncertain">-</b></span>
+              </div>
+              <p class="downsample-note">The strip is reduced to screen width; frame values remain exact.</p>
+            </div>
+          </section>
+
+          <section class="inspection-panel" aria-labelledby="inspection-title">
+            <div class="section-heading inspection-heading">
+              <div>
+                <h2 id="inspection-title">Inspect a frame</h2>
+                <p>Choose a point on the strip or move one frame at a time.</p>
+              </div>
+              <div class="frame-stepper" aria-label="Frame navigation">
+                <button class="step-button" id="previous-frame" type="button" aria-label="Previous frame" disabled>−</button>
+                <label class="frame-input-label" for="frame-input">Frame</label>
+                <input id="frame-input" type="number" min="0" max="199318" value="0" inputmode="numeric" disabled>
+                <button class="step-button" id="next-frame" type="button" aria-label="Next frame" disabled>+</button>
+              </div>
+            </div>
+
+            <div class="inspection-grid">
+              <div class="selected-frame">
+                <span class="detail-label">Selected label</span>
+                <div class="selected-label">
+                  <span class="key-mark key-uncertain" id="selected-code">-</span>
+                  <strong id="selected-name">Load a valid file</strong>
+                </div>
+                <p id="selected-range">A frame and its run details will appear here.</p>
+              </div>
+              <div class="nearby-runs">
+                <div class="nearby-heading">
+                  <h3>Nearby label runs</h3>
+                  <span id="nearby-count">-</span>
+                </div>
+                <ol id="run-list" class="run-list">
+                  <li class="empty-run">A valid file is needed to list label runs.</li>
+                </ol>
+              </div>
+            </div>
+          </section>
+
+          <footer class="sheet-footer">
+            <p>Use the repository validator before submitting. This view is a local inspection aid, not an official score.</p>
+            <span>Possession Lab</span>
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+
+# Licensed match bundle: never commit or redistribute (see DATA.md / RULES.md)
+data/*
+!data/README.md
+!data/.gitkeep
+
+# Generated artefacts
+submissions/
+*.npz
+evaluation/reports/
+evaluation/scoreboard.csv
+
+# Local environment and editor files
+.env
+.env.*
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (frontend tests use the built-in test runner)
+node_modules/
+npm-debug.log*
+
+# OS / temporary
+*.log
+*.tmp
